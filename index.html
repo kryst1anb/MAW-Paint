@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="icon.ico">
+    <meta name="viewport" content="width=device-width user-scalable=no ">
+    <link id="pagestyle" rel="stylesheet" href="style.css" type="text/css">
+<script src="script.js"></script>
+</head>
+<body>
+    <section>
+        <h2>Mobilny Paint</h2>
+    </section>
+<main>
+<div id="sidebar">
+    <h3>MENU</h3>
+    Color: <input type="color"><br>
+    Pen: <span id="valuesPen"></span> <input class="sliderPen" type="range" id="sizePen" value="30" min="5" max="40" onchange="sizeOfPen()"><br>
+    Width: <span id="valuesX"></span> <input class="sliderX" type="range" id="heightX" value="100" min="50" onchange="sizeOfCanvas()"><br>
+    Height: <span id="valuesY"></span> <input class="sliderY" type="range" id="heightY" value="100" min="50" onchange="sizeOfCanvas()"><br>
+    <button id="saveBtn" onclick="save()">SAVE</button><br>
+    <button id="loadBtn" onclick="load()">LOAD</button><br>
+    <button id="downloadBtn" onclick="download()">DOWNLOAD</button>
+</div>
+<div id="mainCanvas">
+    <canvas id="canvas"></canvas>
+</div>
+</main>
+<footer>
+    TESTOWA rozdzielczość <div id="resolution"></div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,40 @@
+body {
+    margin: 0 auto;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgba(59, 59, 59, 0.73);
+}
+
+h2{
+   text-align: center;
+    color: white;
+    size: 20px;
+}
+
+#sidebar{
+    text-align: center;
+    width: 25%;
+    display: inline-block;
+    Float: left;
+    background-color: blue;
+}
+canvas{
+    background-color: green;
+}
+
+#mainCanvas{
+    display: inline-block;
+    position: sticky;
+}
+
+footer{
+    vertical-align: middle;
+    font-weight: bold;
+    font-size: 14px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: rgb(255, 255, 255);
+    background-color: rgb(59, 59, 59);
+    text-align: center;
+}
