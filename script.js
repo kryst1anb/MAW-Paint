@@ -38,8 +38,9 @@ function ruchDotyku(e)
 		var y=e.changedTouches[i].pageY;
 		q.beginPath();
 		q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1);
-		q.lineWidth=7;
-		q.lineTo(x-x1, y-y1);
+		q.lineWidth=document.getElementById("sizePen").value;
+        q.lineTo(x-x1, y-y1);
+        q.strokeStyle = document.getElementById("color").value;
 		q.stroke();
 		tablicaDotyk[i].x=x;
 		tablicaDotyk[i].y=y;
@@ -70,8 +71,7 @@ function sizeOfCanvas(){
 	outputY.innerHTML = sliderY.value;
 
     sliderY.oninput = function() {
-      outputY.innerHTML = this.value;
-      document.getElementById("canvas").setAttribute("style","height:"+sliderY.value+"px;width:"+sliderX.value+"px;");
+        outputY.innerHTML = this.value;
         console.log(sliderY.value);
         console.log(sliderX.value);
     }
@@ -82,10 +82,23 @@ function sizeOfCanvas(){
 
     sliderX.oninput = function() {
       outputX.innerHTML = this.value;
-      document.getElementById("canvas").setAttribute("style","height:"+sliderY.value+"px;width:"+sliderX.value+"px;");
       console.log(sliderY.value);
       console.log(sliderX.value);
     }
+    ResizeCanvas(sliderX.value,sliderY.value)
+}
+function ResizeCanvas(width,height)
+{
+    localStorage.setItem(can,can.toDataURL());
+
+    can.width = width;
+    can.height = height;
+
+    var img = new Image;
+    img.src = localStorage.getItem(can);
+    img.onload = function () {
+    q.drawImage(img, 0, 0);
+};
 }
 
 function load(){
