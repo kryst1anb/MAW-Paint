@@ -106,7 +106,17 @@ function load(){
 }
 
 function save(){
-    console.log("save");
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+        }
+    }
+    request.open("POST", "server.php", true);
+    request.send(JSON.stringify({
+        polecenie: 1,
+        dane: can.toDataURL()
+    }));
 }
 
 function download(){
