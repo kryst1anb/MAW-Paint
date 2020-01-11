@@ -7,6 +7,7 @@ window.onload=function(){
     document.getElementById("resolution").innerHTML = window.innerWidth + "px x "+ window.innerHeight+"px";
     sizeOfPen();
     sizeOfCanvas();
+    loadFiles();
 }
 var tablicaDotyk=[];
 var q;
@@ -100,11 +101,46 @@ function ResizeCanvas(width,height)
     q.drawImage(img, 0, 0);
 };
 }
+function loadFiles(){
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("pliki").innerHTML = this.responseText;
+        }
+    };
+
+    request.open("POST", "server.php", true);
+    request.send(JSON.stringify({
+        polecenie: 3
+    }));
+}
 
 function load(){
     console.log("load");
+    var plik = document.getElementById('plik').value;
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            let img = new Image;
+            img.src = this.response;
+            img.onload = function () 
+            {
+                ResizeCanvas(img.naturalWidth,img.naturalHeight);
+                q.drawImage(img,0,0);
+            }
+        }
+    }
+    request.open("POST", "server.php", true);
+    request.send(JSON.stringify({
+        polecenie: 4,
+        plik: plik+".png"
+    }));
 }
-
+function clearCanvas()
+{
+    can.width = can.width;
+}
 function save(){
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
@@ -118,6 +154,7 @@ function save(){
         dane: can.toDataURL()
     }));
 }
+
 
 function download(){
     console.log("download");

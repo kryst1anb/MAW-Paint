@@ -21,7 +21,12 @@
     Height: <span id="valuesY"></span> <input class="sliderY" type="range" id="heightY" value="100" min="50" onchange="sizeOfCanvas()"><br>
     <button id="saveBtn" onclick="save()">SAVE</button><br>
     <button id="loadBtn" onclick="load()">LOAD</button><br>
+    <input id="plik" list="pliki">
+							<datalist id="pliki">
+
+							</datalist><br>
     <button id="downloadBtn" onclick="download()">DOWNLOAD</button>
+    <button id="clearBtn" onclick="clearCanvas()">CLEAR</button>
 </div>
 <div id="mainCanvas">
     <canvas id="canvas"></canvas>
