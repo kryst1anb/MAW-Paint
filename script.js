@@ -101,6 +101,11 @@ function ResizeCanvas(width,height)
     q.drawImage(img, 0, 0);
 };
 }
+function ResizeCanvas2(width,height)
+{
+    can.width = width;
+    can.height = height;
+}
 function loadFiles(){
     var request = new XMLHttpRequest();
 
@@ -118,15 +123,16 @@ function loadFiles(){
 
 function load(){
     console.log("load");
+    clearCanvas();
     var plik = document.getElementById('plik').value;
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            let img = new Image;
+            var img = new Image;
             img.src = this.response;
             img.onload = function () 
             {
-                ResizeCanvas(img.naturalWidth,img.naturalHeight);
+                ResizeCanvas2(img.width,img.height);
                 q.drawImage(img,0,0);
             }
         }
@@ -139,7 +145,7 @@ function load(){
 }
 function clearCanvas()
 {
-    can.width = can.width;
+    q.clearRect(0, 0, can.width, can.height);
 }
 function save(){
     var request = new XMLHttpRequest();
@@ -158,4 +164,27 @@ function save(){
 
 function download(){
     console.log("download");
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            PutToFile(this.responseText.substring(0, this.responseText.indexOf("<option")),can.toDataURL())
+        }
+    }
+    request.open("POST", "server.php", true);
+    request.send(JSON.stringify({
+        polecenie: 2,
+    }));
+}
+function PutToFile(filename,source)
+{
+    var element = document.createElement('a');
+    element.setAttribute('href', source);
+    element.setAttribute('download', filename);
+  
+    element.style.display = 'none';
+    document.body.appendChild(element);
+  
+    element.click();
+  
+    document.body.removeChild(element);
 }
