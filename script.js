@@ -55,6 +55,8 @@ function ruchDotyku(e)
             q.lineWidth=document.getElementById("sizePen").value; //pobranie lini
             q.lineTo(x-x1, y-y1); //deklaracja rysowania 
             q.strokeStyle = color;
+            q.lineJoin = "round";
+            q.lineCap = "round";
             q.stroke(); //rysowanie
             tablicaDotyk[i].x=x;
             tablicaDotyk[i].y=y;
@@ -63,10 +65,10 @@ function ruchDotyku(e)
         if(mode === 'line')
         {  
             //w każdej klatce czyścimy canvas2
-            q.clearRect(0, 0, can.width, can.height);
-            q.beginPath();
+           // q.clearRect(0, 0, can.width, can.height);
+            //q.beginPath();
             //rysujemy linię od początkowej pozycji
-            q.moveTo(this.startX, this.startY);
+            q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1);
             //do aktualnej pozycji kursora
             q.lineTo(x-x1, y-y1);
             q.closePath();
