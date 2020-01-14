@@ -22,6 +22,10 @@
                 $success = file_put_contents($file, $dane);
                 print $success ? $file : 'Unable to save the file.';
             break;
+            case 2: //echo daty wraz z godzina dla nazwy pliku
+                $data = date("Y-m-d_H-i-s");
+                $file = $data.'.png';
+                echo $file;
             case 3: //wczytywanie do listy wszystkie pliki z rozszerzeniem .base64
                 $wynik = '';
                 $files = glob('{*.png}', GLOB_BRACE);

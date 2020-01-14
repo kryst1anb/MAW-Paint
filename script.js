@@ -1,17 +1,34 @@
 window.onload=function(){
+
+    this.avaibleMode = ['pen', 'line', 'rubber'];
+    
+
     can = document.querySelector("canvas");
     q = can.getContext("2d");
+    //dodaje
+    can2 = document.querySelector("canvas");
+    q2 = can2.getContext("2d");
+
     can.addEventListener('touchstart',startDotyku,true);
 	can.addEventListener('touchend',stopDotyku,true);
-	can.addEventListener('touchmove',ruchDotyku,true);
+    can.addEventListener('touchmove',ruchDotyku,true);
+    can.addEventListener('mousedown',ruchDotyku,true);
     document.getElementById("resolution").innerHTML = window.innerWidth + "px x "+ window.innerHeight+"px";
-    sizeOfPen();
+    //sizeOfPen();
     sizeOfCanvas();
     loadFiles();
+
+    controlPanel();
+    changeMode();
+
+    //czy mozemy rysowac
+    this.canDraw = false;
+    this.mode = 'pen';
 }
 var tablicaDotyk=[];
-var q;
-var can;
+var q; //kontekst canvasu
+var can; // canvas
+var color;
 function startDotyku(e)
 {
     tablicaDotyk.length=0;	
@@ -35,36 +52,122 @@ function ruchDotyku(e)
 	
 	for(var i=0; i<e.changedTouches.length && i<tablicaDotyk.length; i++)
 	{
+        if(this.canDraw){
+
+            if(this.mode === 'pen'){
+                var x=e.changedTouches[i].pageX;
+                var y=e.changedTouches[i].pageY;
+                q.beginPath(); //rozpoczecie sciezki malowania
+                q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
+                q.lineWidth=document.getElementById("sizePen").value; //pobranie lini
+                q.lineTo(x-x1, y-y1); //deklaracja rysowania 
+                q.strokeStyle = color;
+                q.stroke(); //rysowanie
+                tablicaDotyk[i].x=x;
+                 tablicaDotyk[i].y=y;
+            }
+        }
+        if(this.mode === 'line')
+        {   
+            //pracuje
+            var x=e.changedTouches[i].pageX; 
+            var y=e.changedTouches[i].pageY;
+            //w każdej klatce czyścimy canvas2
+            q2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
+            q2.beginPath();
+            //rysujemy linię od początkowej pozycji
+            q2.moveTo(this.startX, this.startY);
+            //do aktualnej pozycji kursora
+            q2.lineTo(mousePos.x, mousePos.y);
+            q2.closePath();
+            q2.stroke();
+        }
+
+
+
+        /*
 		var x=e.changedTouches[i].pageX;
 		var y=e.changedTouches[i].pageY;
-		q.beginPath();
-		q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1);
-		q.lineWidth=document.getElementById("sizePen").value;
-        q.lineTo(x-x1, y-y1);
-        q.strokeStyle = document.getElementById("color").value;
-		q.stroke();
+		q.beginPath(); //rozpoczecie sciezki malowania
+		q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
+		q.lineWidth=document.getElementById("sizePen").value; //pobranie lini
+        q.lineTo(x-x1, y-y1); //deklaracja rysowania 
+        q.strokeStyle = color;
+        q.stroke(); //rysowanie
+
+
+        //potrzebne bo inaczej nie dziala dobrze
 		tablicaDotyk[i].x=x;
-		tablicaDotyk[i].y=y;
-	}
+        tablicaDotyk[i].y=y;
+        */
+    }
+    //brak odswiezania
 	e.preventDefault();
 	e.stopPropagation()
 }
-function sizeOfPen(){
-    var sliderPen = document.getElementById("sizePen");
-	var outputPen = document.getElementById("valuesPen");
+
+function controlPanel()
+{
+    //element pobierania wielkości pędzla
+    var sliderPen = document.getElementById("sizePen"); //suwaczek
+	var outputPen = document.getElementById("valuesPen"); //wartosc suwaczka
 	outputPen.innerHTML = sliderPen.value;
 
     sliderPen.oninput = function() {
       outputPen.innerHTML = this.value;
     }
     console.log(sliderPen.value);
+
+    //element do pobierania koloru
+    color = document.getElementById("color").value; //pobranie koloru
+
+    //przypisujemy przyciskom wartosc akcji
+    this.btnsMode = [...document.querySelectorAll('.paint-buttons .button-mode')];
+
+    //dla przycisku z trybem draw dodajemy klasę active
+    this.btnsMode.filter(function(el) {
+        return el.dataset.mode === 'pen'
+    })[0].classList.add('active');
 }
+
+function setupQ()
+{
+
+}
+
+
+function changeMode()
+{
+    //po kliknięciu w przycisk zmiany trybu rysowania
+    //wszystkim jego braciom wyłączamy klasę .active, a włączamy tylko temu klikniętemu
+    //dodatkowo ustawiamy tryb rysowania na pobrany z dataset.mode klikniętego przycisku
+    for (const el of this.btnsMode) {
+        el.addEventListener('click', (e) => {
+            e.currentTarget.classList.add('active');
+            this.mode = e.currentTarget.dataset.mode;
+
+            for (const el of this.btnsMode) {
+                if (el !== e.currentTarget) {
+                    el.classList.remove('active');
+                }
+            };
+        });
+    }
+}
+
+function enableMode()
+{
+    if (this.avaibleMode.indexOf(mode) !== -1) {
+        this.mode = mode;
+    }
+}
+
 
 function sizeOfCanvas(){
     console.log(Math.floor(window.innerWidth/1.25)+'px');
     console.log(Math.floor(window.innerHeight/1.25)+'px');
-    document.getElementById("heightX").max = Math.floor(window.innerHeight/1.25);
-    document.getElementById("heightY").max = Math.floor(window.innerWidth/1.25);
+    document.getElementById("heightX").max = Math.floor(window.innerHeight/1.75);
+    document.getElementById("heightY").max = Math.floor(window.innerWidth/1.75);
 
     var sliderY = document.getElementById("heightY");
     var outputY = document.getElementById("valuesY");
@@ -88,6 +191,7 @@ function sizeOfCanvas(){
     }
     ResizeCanvas(sliderX.value,sliderY.value)
 }
+
 function ResizeCanvas(width,height)
 {
     localStorage.setItem(can,can.toDataURL());
@@ -95,11 +199,20 @@ function ResizeCanvas(width,height)
     can.width = width;
     can.height = height;
 
+    can2.width = width; // dodaje
+    can2.height = height; //dodaje
+
     var img = new Image;
     img.src = localStorage.getItem(can);
+    img.src = localStorage.getItem(can2); //dodaje
     img.onload = function () {
     q.drawImage(img, 0, 0);
 };
+}
+function ResizeCanvas2(width,height)
+{
+    can.width = width;
+    can.height = height;
 }
 function loadFiles(){
     var request = new XMLHttpRequest();
@@ -118,15 +231,16 @@ function loadFiles(){
 
 function load(){
     console.log("load");
+    clearCanvas();
     var plik = document.getElementById('plik').value;
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            let img = new Image;
+            var img = new Image;
             img.src = this.response;
             img.onload = function () 
             {
-                ResizeCanvas(img.naturalWidth,img.naturalHeight);
+                ResizeCanvas2(img.width,img.height);
                 q.drawImage(img,0,0);
             }
         }
@@ -139,7 +253,7 @@ function load(){
 }
 function clearCanvas()
 {
-    can.width = can.width;
+    q.clearRect(0, 0, can.width, can.height);
 }
 function save(){
     var request = new XMLHttpRequest();
@@ -158,4 +272,27 @@ function save(){
 
 function download(){
     console.log("download");
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            PutToFile(this.responseText.substring(0, this.responseText.indexOf("<option")),can.toDataURL())
+        }
+    }
+    request.open("POST", "server.php", true);
+    request.send(JSON.stringify({
+        polecenie: 2,
+    }));
+}
+function PutToFile(filename,source)
+{
+    var element = document.createElement('a');
+    element.setAttribute('href', source);
+    element.setAttribute('download', filename);
+  
+    element.style.display = 'none';
+    document.body.appendChild(element);
+  
+    element.click();
+  
+    document.body.removeChild(element);
 }
