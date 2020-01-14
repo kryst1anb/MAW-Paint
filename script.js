@@ -1,13 +1,7 @@
 window.onload=function(){
 
-    this.avaibleMode = ['pen', 'line', 'rubber'];
-    
-
     can = document.querySelector("canvas");
     q = can.getContext("2d");
-    //dodaje
-    can2 = document.querySelector("canvas");
-    q2 = can2.getContext("2d");
 
     can.addEventListener('touchstart',startDotyku,true);
 	can.addEventListener('touchend',stopDotyku,true);
@@ -21,14 +15,14 @@ window.onload=function(){
     controlPanel();
     changeMode();
 
-    //czy mozemy rysowac
-    this.canDraw = false;
-    this.mode = 'pen';
 }
 var tablicaDotyk=[];
 var q; //kontekst canvasu
 var can; // canvas
 var color;
+var avaibleMode = ['pen', 'line', 'rubber'];
+
+
 function startDotyku(e)
 {
     tablicaDotyk.length=0;	
@@ -52,35 +46,34 @@ function ruchDotyku(e)
 	
 	for(var i=0; i<e.changedTouches.length && i<tablicaDotyk.length; i++)
 	{
-        if(this.canDraw){
+        var x=e.changedTouches[i].pageX; 
+        var y=e.changedTouches[i].pageY;
 
-            if(this.mode === 'pen'){
-                var x=e.changedTouches[i].pageX;
-                var y=e.changedTouches[i].pageY;
-                q.beginPath(); //rozpoczecie sciezki malowania
-                q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
-                q.lineWidth=document.getElementById("sizePen").value; //pobranie lini
-                q.lineTo(x-x1, y-y1); //deklaracja rysowania 
-                q.strokeStyle = color;
-                q.stroke(); //rysowanie
-                tablicaDotyk[i].x=x;
-                 tablicaDotyk[i].y=y;
-            }
+        if(mode === 'pen'){
+            q.beginPath(); //rozpoczecie sciezki malowania
+            q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
+            q.lineWidth=document.getElementById("sizePen").value; //pobranie lini
+            q.lineTo(x-x1, y-y1); //deklaracja rysowania 
+            q.strokeStyle = color;
+            q.stroke(); //rysowanie
+            tablicaDotyk[i].x=x;
+            tablicaDotyk[i].y=y;
         }
-        if(this.mode === 'line')
-        {   
-            //pracuje
-            var x=e.changedTouches[i].pageX; 
-            var y=e.changedTouches[i].pageY;
+
+        if(mode === 'line')
+        {  
             //w każdej klatce czyścimy canvas2
-            q2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
-            q2.beginPath();
+            q.clearRect(0, 0, can.width, can.height);
+            q.beginPath();
             //rysujemy linię od początkowej pozycji
-            q2.moveTo(this.startX, this.startY);
+            q.moveTo(this.startX, this.startY);
             //do aktualnej pozycji kursora
-            q2.lineTo(mousePos.x, mousePos.y);
-            q2.closePath();
-            q2.stroke();
+            q.lineTo(x-x1, y-y1);
+            q.closePath();
+            q.stroke();
+
+            tablicaDotyk[i].x=x;
+            tablicaDotyk[i].y=y;
         }
 
 
@@ -199,12 +192,8 @@ function ResizeCanvas(width,height)
     can.width = width;
     can.height = height;
 
-    can2.width = width; // dodaje
-    can2.height = height; //dodaje
-
     var img = new Image;
     img.src = localStorage.getItem(can);
-    img.src = localStorage.getItem(can2); //dodaje
     img.onload = function () {
     q.drawImage(img, 0, 0);
 };
