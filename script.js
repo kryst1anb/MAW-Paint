@@ -20,7 +20,7 @@ var tablicaDotyk=[];
 var q; //kontekst canvasu
 var can; // canvas
 var color;
-var avaibleMode = ['pen', 'line', 'rubber'];
+//var avaibleMode = ['pen', 'line', 'rubber'];
 
 
 function startDotyku(e)
@@ -64,37 +64,19 @@ function ruchDotyku(e)
 
         if(mode === 'line')
         {  
-            //w każdej klatce czyścimy canvas2
-           // q.clearRect(0, 0, can.width, can.height);
-            //q.beginPath();
-            //rysujemy linię od początkowej pozycji
-            q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1);
-            //do aktualnej pozycji kursora
+            //q.clearRect(0, 0, tablicaDotyk[i].x,tablicaDotyk[i].y);
+            q.beginPath();
+            q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
             q.lineTo(x-x1, y-y1);
-            q.closePath();
+            q.strokeStyle = color;
             q.stroke();
 
-            tablicaDotyk[i].x=x;
-            tablicaDotyk[i].y=y;
         }
-
-
-
-        /*
-		var x=e.changedTouches[i].pageX;
-		var y=e.changedTouches[i].pageY;
-		q.beginPath(); //rozpoczecie sciezki malowania
-		q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
-		q.lineWidth=document.getElementById("sizePen").value; //pobranie lini
-        q.lineTo(x-x1, y-y1); //deklaracja rysowania 
-        q.strokeStyle = color;
-        q.stroke(); //rysowanie
-
-
-        //potrzebne bo inaczej nie dziala dobrze
-		tablicaDotyk[i].x=x;
-        tablicaDotyk[i].y=y;
-        */
+        if(mode ==='rubber')
+        {
+            document.getElementById("sizePen").value;
+            q.clearRect(e.changedTouches[i].pageX-x1,e.changedTouches[i].pageY-y1,document.getElementById("sizePen").value,document.getElementById("sizePen").value);
+        }
     }
     //brak odswiezania
 	e.preventDefault();
@@ -124,12 +106,6 @@ function controlPanel()
         return el.dataset.mode === 'pen'
     })[0].classList.add('active');
 }
-
-function setupQ()
-{
-
-}
-
 
 function changeMode()
 {
