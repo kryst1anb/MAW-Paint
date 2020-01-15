@@ -6,34 +6,66 @@
     <link rel="shortcut icon" href="icon.ico">
     <meta name="viewport" content="width=device-width user-scalable=no">
     <link id="pagestyle" rel="stylesheet" href="style.css" type="text/css">
-<script src="script.js"></script>
+    <link rel="shortcut icon" href="icon.ico">
+    <script src="script.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
 </head>
-<body>
-    <section>
-        <h2>Mobilny Paint</h2>
-    </section>
-<main>
-<div id="sidebar">
-    <h3>MENU</h3>
-    Color: <input type="color" id="color"><br>
-    Pen: <span id="valuesPen"></span> <input class="sliderPen" type="range" id="sizePen" value="5" min="5" max="40" onchange="sizeOfPen()"><br>
-    Width: <span id="valuesX"></span> <input class="sliderX" type="range" id="heightX" value="100" min="50" onchange="sizeOfCanvas()"><br>
-    Height: <span id="valuesY"></span> <input class="sliderY" type="range" id="heightY" value="100" min="50" onchange="sizeOfCanvas()"><br>
-    <button id="saveBtn" onclick="save()">SAVE</button><br>
-    <button id="loadBtn" onclick="load()">LOAD</button><br>
-    <input id="plik" list="pliki">
-							<datalist id="pliki">
 
-							</datalist><br>
-    <button id="downloadBtn" onclick="download()">DOWNLOAD</button>
-    <button id="clearBtn" onclick="clearCanvas()">CLEAR</button>
-</div>
-<div id="mainCanvas">
-    <canvas id="canvas"></canvas>
-</div>
-</main>
-<footer>
-    TESTOWA rozdzielczość <div id="resolution"></div>
-</footer>
+<body>
+    <main>
+        <img id="options" src="settings.png"/>
+        <button data-mode="pen" class="button-mode" type="button"><img src="pen.png"/></button>
+        <button data-mode="line" class="button-mode" type="button"><img src="line.png"/></button>
+        <button data-mode="rubber" class="button-mode" type="button"><img src="rubber.png"/></button>
+        <div class="sidebar" style="display: none" id="menuToggle">
+            <div class="kolorki">
+                <input type="color" id="color" class="color" value="#000000">
+                <input type="color" id="color" class="color" value="#FFFFFF">
+                <input type="color" id="color" class="color" value="#FF0000">
+                <input type="color" id="color" class="color" value="#FF00FF">
+                <input type="color" id="color" class="color" value="#00FF00">
+                <input type="color" id="color" class="color" value="#FFFF00">
+                <input type="color" id="color" class="color" value="#0000FF">
+                <input type="color" id="color" class="color" value="#00FFFF">
+            </div>
+            <div class="suwaczki">
+                <span id="Label">SIZE</span>
+                <input class="sliderPen" type="range" id="sizePen" value="5" min="5" max="40" onchange="sizeOfPen()"><span id="valuesPen"></span>
+                <br>
+                <span id="Label">WIDTH</span>
+                <input class="sliderX" type="range" id="heightX" value="100" min="50" onchange="sizeOfCanvas()"><span id="valuesX"></span>
+                <br>
+                <span id="Label">HEIGHT</span>
+                <input class="sliderY" type="range" id="heightY" value="100" min="50" onchange="sizeOfCanvas()"><span id="valuesY"></span>
+                <br>
+            </div>
+            <div class="guziczki">
+                <input type="list" id="plik" list="pliki" placeholder="Select your file to load">
+                <datalist id="pliki">
+                </datalist>
+
+                <button class="button" id="loadBtn" onclick="load()">LOAD</button>
+                <button class="button" id="saveBtn" onclick="save();loadFiles();">SAVE</button>
+
+                <button class="button" id="downloadBtn" onclick="download()">DOWNLOAD</button>
+                <button class="button" id="clearBtn" onclick="clearCanvas()">CLEAR</button>
+            </div>
+        </div>
+        <br>
+        <div id="mainCanvas">
+            <canvas id="canvas"></canvas>
+        </div>
+        <script>
+            $("#options").click(function(){
+               $(".sidebar").toggle("slow");
+            });
+        </script>
+
+    </main>
+    <footer>
+        <div id="autors">Aleksander Boronowski, Szymon Babula<br>Krystian Barczak, Krzysztof Dragon</div>
+        <div id="resolution"></div>
+    </footer>
 </body>
+
 </html>

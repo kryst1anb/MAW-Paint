@@ -1,17 +1,30 @@
 window.onload=function(){
+
     can = document.querySelector("canvas");
     q = can.getContext("2d");
+
+    can2 = document.querySelector("canvas");
+    q2 = can.getContext("2d");
+
+
     can.addEventListener('touchstart',startDotyku,true);
 	can.addEventListener('touchend',stopDotyku,true);
-	can.addEventListener('touchmove',ruchDotyku,true);
-    document.getElementById("resolution").innerHTML = window.innerWidth + "px x "+ window.innerHeight+"px";
-    sizeOfPen();
+    can.addEventListener('touchmove',ruchDotyku,true);
+    can.addEventListener('mousedown',ruchDotyku,true);
+    document.getElementById("resolution").innerHTML = "Rozdzielczość: " + window.innerWidth + "px x "+ window.innerHeight+"px";
+    //sizeOfPen();
     sizeOfCanvas();
     loadFiles();
+
+    controlPanel();
+    changeMode();
 }
 var tablicaDotyk=[];
-var q;
-var can;
+var q,q2; //kontekst canvasu
+var can,can2; // canvas
+var color;
+//var avaibleMode = ['pen', 'line', 'rubber'];
+
 function startDotyku(e)
 {
     tablicaDotyk.length=0;	
@@ -27,44 +40,111 @@ function startDotyku(e)
 function stopDotyku()
 {
     tablicaDotyk.length=0;
+    if(mode ==='line'){
+        q.drawImage(can2,0,0);
+        //q2.clearRect(0,0,can.width,can.height);
+    }
 }
 function ruchDotyku(e)
 {
     var x1=can.getBoundingClientRect().left;
 	var y1=can.getBoundingClientRect().top;
 	
-	for(var i=0; i<e.changedTouches.length && i<tablicaDotyk.length; i++)
+	for(var i=0; i<e.changedTouches.length; i++)
 	{
-		var x=e.changedTouches[i].pageX;
-		var y=e.changedTouches[i].pageY;
-		q.beginPath();
-		q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1);
-		q.lineWidth=document.getElementById("sizePen").value;
-        q.lineTo(x-x1, y-y1);
-        q.strokeStyle = document.getElementById("color").value;
-		q.stroke();
-		tablicaDotyk[i].x=x;
-		tablicaDotyk[i].y=y;
-	}
+        var x=e.changedTouches[i].pageX; 
+        var y=e.changedTouches[i].pageY;
+
+        if(mode === 'pen'){
+            q.beginPath(); //rozpoczecie sciezki malowania
+            q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
+            q.lineWidth=document.getElementById("sizePen").value; //pobranie lini
+            q.lineTo(x-x1, y-y1); //deklaracja rysowania 
+            q.strokeStyle = color;
+            q.lineJoin = "round";
+            q.lineCap = "round";
+            q.stroke(); //rysowanie
+            tablicaDotyk[i].x=x;
+            tablicaDotyk[i].y=y;
+        }
+
+        if(mode === 'line')
+        {  
+            //q.clearRect(0, 0, tablicaDotyk[i].x,tablicaDotyk[i].y);
+            q2.clearRect(0, 0, can2.width, can2.height);
+            q2.beginPath();
+            q2.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
+            q2.lineTo(x-x1, y-y1);
+            q2.strokeStyle = color;
+            q2.closePath();
+            q2.stroke();
+
+        }
+        if(mode ==='rubber')
+        {
+            document.getElementById("sizePen").value;
+            q.clearRect(e.changedTouches[i].pageX-x1,e.changedTouches[i].pageY-y1,document.getElementById("sizePen").value,document.getElementById("sizePen").value);
+        }
+    }
+    //brak odswiezania
 	e.preventDefault();
 	e.stopPropagation()
 }
-function sizeOfPen(){
-    var sliderPen = document.getElementById("sizePen");
-	var outputPen = document.getElementById("valuesPen");
+
+function controlPanel()
+{
+    //element pobierania wielkości pędzla
+    var sliderPen = document.getElementById("sizePen"); //suwaczek
+	var outputPen = document.getElementById("valuesPen"); //wartosc suwaczka
 	outputPen.innerHTML = sliderPen.value;
 
     sliderPen.oninput = function() {
       outputPen.innerHTML = this.value;
     }
     console.log(sliderPen.value);
+
+    //element do pobierania koloru
+    color = document.getElementById("color").value; //pobranie koloru
+
+    //przypisujemy przyciskom wartosc akcji
+    this.btnsMode = [...document.querySelectorAll('.paint-buttons .button-mode')];
+
+    //dla przycisku z trybem draw dodajemy klasę active
+    this.btnsMode.filter(function(el) {
+        return el.dataset.mode === 'pen';
+    })[0].classList.add('active');
 }
 
+function changeMode()
+{
+    //po kliknięciu w przycisk zmiany trybu rysowania
+    //wszystkim jego braciom wyłączamy klasę .active, a włączamy tylko temu klikniętemu
+    //dodatkowo ustawiamy tryb rysowania na pobrany z dataset.mode klikniętego przycisku
+    for (const el of this.btnsMode) {
+        el.addEventListener('click', (e) => {
+            e.currentTarget.classList.add('active');
+            this.mode = e.currentTarget.dataset.mode;
+
+            for (const el of this.btnsMode) {
+                if (el !== e.currentTarget) {
+                    el.classList.remove('active');
+                }
+            };
+        });
+    }
+}
+
+function enableMode()
+{
+    if (this.avaibleMode.indexOf(mode) !== -1) {
+        this.mode = mode;
+    }
+}
+
+
 function sizeOfCanvas(){
-    console.log(Math.floor(window.innerWidth/1.25)+'px');
-    console.log(Math.floor(window.innerHeight/1.25)+'px');
-    document.getElementById("heightX").max = Math.floor(window.innerHeight/1.25);
-    document.getElementById("heightY").max = Math.floor(window.innerWidth/1.25);
+    document.getElementById("heightY").max = Math.floor(window.innerHeight)-253;
+    document.getElementById("heightX").max = Math.floor(window.innerWidth)-10;
 
     var sliderY = document.getElementById("heightY");
     var outputY = document.getElementById("valuesY");
@@ -72,9 +152,9 @@ function sizeOfCanvas(){
 	outputY.innerHTML = sliderY.value;
 
     sliderY.oninput = function() {
-        outputY.innerHTML = this.value;
-        console.log(sliderY.value);
-        console.log(sliderX.value);
+        sliderY.innerHTML= this.value;
+        
+        valuesY.innerHTML = this.value;
     }
 
     var sliderX = document.getElementById("heightX");
@@ -82,12 +162,12 @@ function sizeOfCanvas(){
 	outputX.innerHTML = sliderX.value;
 
     sliderX.oninput = function() {
-      outputX.innerHTML = this.value;
-      console.log(sliderY.value);
-      console.log(sliderX.value);
+        sliderX.innerHTML = this.value;
+        valuesX.innerHTML = this.value;
     }
-    ResizeCanvas(sliderX.value,sliderY.value)
+    ResizeCanvas(sliderX.value,sliderY.value);
 }
+
 function ResizeCanvas(width,height)
 {
     localStorage.setItem(can,can.toDataURL());
@@ -95,8 +175,12 @@ function ResizeCanvas(width,height)
     can.width = width;
     can.height = height;
 
+    can2.width = width;//
+    can2.height = height;//
+
     var img = new Image;
     img.src = localStorage.getItem(can);
+    img.src = localStorage.getItem(can2);//
     img.onload = function () {
     q.drawImage(img, 0, 0);
 };
@@ -120,6 +204,7 @@ function loadFiles(){
         polecenie: 3
     }));
 }
+
 
 function load(){
     console.log("load");
