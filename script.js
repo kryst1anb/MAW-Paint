@@ -3,6 +3,10 @@ window.onload=function(){
     can = document.querySelector("canvas");
     q = can.getContext("2d");
 
+    can2 = document.querySelector("canvas");
+    q2 = can.getContext("2d");
+
+
     can.addEventListener('touchstart',startDotyku,true);
 	can.addEventListener('touchend',stopDotyku,true);
     can.addEventListener('touchmove',ruchDotyku,true);
@@ -17,8 +21,8 @@ window.onload=function(){
 
 }
 var tablicaDotyk=[];
-var q; //kontekst canvasu
-var can; // canvas
+var q,q2; //kontekst canvasu
+var can,can2; // canvas
 var color;
 //var avaibleMode = ['pen', 'line', 'rubber'];
 
@@ -38,6 +42,10 @@ function startDotyku(e)
 function stopDotyku()
 {
     tablicaDotyk.length=0;
+    if(mode ==='line'){
+        q.drawImage(can2,0,0);
+        //q2.clearRect(0,0,can.width,can.height);
+    }
 }
 function ruchDotyku(e)
 {
@@ -65,11 +73,13 @@ function ruchDotyku(e)
         if(mode === 'line')
         {  
             //q.clearRect(0, 0, tablicaDotyk[i].x,tablicaDotyk[i].y);
-            q.beginPath();
-            q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
-            q.lineTo(x-x1, y-y1);
-            q.strokeStyle = color;
-            q.stroke();
+            q2.clearRect(0, 0, can2.width, can2.height);
+            q2.beginPath();
+            q2.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
+            q2.lineTo(x-x1, y-y1);
+            q2.strokeStyle = color;
+            q2.closePath();
+            q2.stroke();
 
         }
         if(mode ==='rubber')
@@ -170,8 +180,12 @@ function ResizeCanvas(width,height)
     can.width = width;
     can.height = height;
 
+    can2.width = width;//
+    can2.height = height;//
+
     var img = new Image;
     img.src = localStorage.getItem(can);
+    img.src = localStorage.getItem(can2);//
     img.onload = function () {
     q.drawImage(img, 0, 0);
 };
