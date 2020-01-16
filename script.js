@@ -3,27 +3,31 @@ window.onload=function(){
     can = document.querySelector("canvas");
     q = can.getContext("2d");
 
-    can2 = document.querySelector("canvas");
-    q2 = can.getContext("2d");
-
-
     can.addEventListener('touchstart',startDotyku,true);
 	can.addEventListener('touchend',stopDotyku,true);
     can.addEventListener('touchmove',ruchDotyku,true);
     can.addEventListener('mousedown',ruchDotyku,true);
     document.getElementById("resolution").innerHTML = "Rozdzielczość: " + window.innerWidth + "px x "+ window.innerHeight+"px";
-    //sizeOfPen();
     sizeOfCanvas();
     loadFiles();
-
     controlPanel();
     changeMode();
+    getColor();
 }
 var tablicaDotyk=[];
-var q,q2; //kontekst canvasu
-var can,can2; // canvas
+var q; //kontekst canvasu
+var can; // canvas
 var color;
+mode = "pen";
 //var avaibleMode = ['pen', 'line', 'rubber'];
+
+function getColor(){
+    var value;
+    for(i=0;i<8;i++)
+    {
+        document.querySelector('input[id="color'+i+'"]').style.background = document.querySelector('input[id="color'+i+'"]').value;
+    }
+}
 
 function startDotyku(e)
 {
@@ -33,17 +37,14 @@ function startDotyku(e)
 		var x=e.changedTouches[i].clientX;
 	    var y=e.changedTouches[i].clientY;
         tablicaDotyk.push({x:x,y:y});
-	}
+    }
+    CurrentCanvasState(can,false);
 	e.preventDefault();
-	e.stopPropagation()
+	e.stopPropagation();
 }
 function stopDotyku()
 {
     tablicaDotyk.length=0;
-    if(mode ==='line'){
-        q.drawImage(can2,0,0);
-        //q2.clearRect(0,0,can.width,can.height);
-    }
 }
 function ruchDotyku(e)
 {
@@ -58,26 +59,25 @@ function ruchDotyku(e)
         if(mode === 'pen'){
             q.beginPath(); //rozpoczecie sciezki malowania
             q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
-            q.lineWidth=document.getElementById("sizePen").value; //pobranie lini
+            q.lineWidth=document.getElementById("sizePen").value;
             q.lineTo(x-x1, y-y1); //deklaracja rysowania 
             q.strokeStyle = color;
             q.lineJoin = "round";
             q.lineCap = "round";
-            q.stroke(); //rysowanie
+            q.stroke();
             tablicaDotyk[i].x=x;
             tablicaDotyk[i].y=y;
         }
 
         if(mode === 'line')
-        {  
-            //q.clearRect(0, 0, tablicaDotyk[i].x,tablicaDotyk[i].y);
-            q2.clearRect(0, 0, can2.width, can2.height);
-            q2.beginPath();
-            q2.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
-            q2.lineTo(x-x1, y-y1);
-            q2.strokeStyle = color;
-            q2.closePath();
-            q2.stroke();
+        {
+            CurrentCanvasState(can,true)
+            q.beginPath();
+            q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
+            q.lineTo(x-x1, y-y1);
+            q.strokeStyle = color;
+            q.closePath();
+            q.stroke();
 
         }
         if(mode ==='rubber')
@@ -89,6 +89,24 @@ function ruchDotyku(e)
     //brak odswiezania
 	e.preventDefault();
 	e.stopPropagation()
+}
+function CurrentCanvasState(context,flag)
+{
+    if(flag === false){
+    localStorage.setItem(context,context.toDataURL());
+    }else{
+    q.clearRect(0,0,can.width,can.height);
+    var img = new Image;
+    img.src = localStorage.getItem(context);
+
+    img.onload = function () {
+    q.drawImage(img, 0, 0);
+        }
+    }
+}
+function ChangeColor(value)
+{
+    color = value;
 }
 
 function controlPanel()
@@ -103,11 +121,8 @@ function controlPanel()
     }
     console.log(sliderPen.value);
 
-    //element do pobierania koloru
-    color = document.getElementById("color").value; //pobranie koloru
-
     //przypisujemy przyciskom wartosc akcji
-    this.btnsMode = [...document.querySelectorAll('.paint-buttons .button-mode')];
+    this.btnsMode = [...document.querySelectorAll('.button-mode')];
 
     //dla przycisku z trybem draw dodajemy klasę active
     this.btnsMode.filter(function(el) {
@@ -175,12 +190,9 @@ function ResizeCanvas(width,height)
     can.width = width;
     can.height = height;
 
-    can2.width = width;//
-    can2.height = height;//
-
     var img = new Image;
     img.src = localStorage.getItem(can);
-    img.src = localStorage.getItem(can2);//
+
     img.onload = function () {
     q.drawImage(img, 0, 0);
 };
