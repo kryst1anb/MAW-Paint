@@ -1,7 +1,9 @@
 window.onload=function(){
 
-    can = document.querySelector("canvas");
+    can = document.getElementById("canvas");
     q = can.getContext("2d");
+    can2 = document.getElementById("canvas2");
+    q2 = can2.getContext("2d")
 
     can.addEventListener('touchstart',startDotyku,true);
 	can.addEventListener('touchend',stopDotyku,true);
@@ -12,12 +14,22 @@ window.onload=function(){
     loadFiles();
     controlPanel();
     changeMode();
+    getColor();
 }
 var tablicaDotyk=[];
-var q; //kontekst canvasu
-var can; // canvas
+var q,q2; //kontekst canvasu
+var can,can2; // canvas
 var color;
+mode = "pen";
 //var avaibleMode = ['pen', 'line', 'rubber'];
+
+function getColor(){
+    var value;
+    for(i=0;i<8;i++)
+    {
+        document.querySelector('input[id="color'+i+'"]').style.background = document.querySelector('input[id="color'+i+'"]').value;
+    }
+}
 
 function startDotyku(e)
 {
@@ -30,11 +42,20 @@ function startDotyku(e)
     }
     CurrentCanvasState(can,false);
 	e.preventDefault();
-	e.stopPropagation()
+	e.stopPropagation();
 }
 function stopDotyku()
 {
     tablicaDotyk.length=0;
+    if(mode === 'line')
+    {
+        var img = new Image;
+        img.src = can2.toDataURL();
+
+        img.onload = function () {
+        q.drawImage(img, 0, 0);
+        }
+    }
 }
 function ruchDotyku(e)
 {
@@ -61,13 +82,15 @@ function ruchDotyku(e)
 
         if(mode === 'line')
         {
-            CurrentCanvasState(can,true)
-            q.beginPath();
-            q.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
-            q.lineTo(x-x1, y-y1);
-            q.strokeStyle = color;
-            q.closePath();
-            q.stroke();
+            q2.clearRect(0,0,can2.width,can2.height);
+            q2.beginPath();
+            q2.moveTo(tablicaDotyk[i].x-x1,tablicaDotyk[i].y-y1); 
+            q2.lineWidth=document.getElementById("sizePen").value;
+            q2.lineTo(x-x1, y-y1);
+            q2.strokeStyle = color;
+            q2.closePath();
+            q2.stroke();
+
 
         }
         if(mode ==='rubber')
@@ -179,6 +202,8 @@ function ResizeCanvas(width,height)
 
     can.width = width;
     can.height = height;
+    can2.width = width;
+    can2.height = height;
 
     var img = new Image;
     img.src = localStorage.getItem(can);
@@ -191,6 +216,8 @@ function ResizeCanvas2(width,height)
 {
     can.width = width;
     can.height = height;
+    can2.width = width;
+    can2.height = height;
 }
 function loadFiles(){
     var request = new XMLHttpRequest();
@@ -233,6 +260,7 @@ function load(){
 function clearCanvas()
 {
     q.clearRect(0, 0, can.width, can.height);
+    q2.clearRect(0, 0, can2.width, can2.height);
 }
 function save(){
     var request = new XMLHttpRequest();

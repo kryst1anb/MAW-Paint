@@ -24,8 +24,8 @@ body {
 }
 
 canvas {
-    position: inherit;
-    background-color: green;
+    border: 1px solid black;
+    position: absolute;
 }
 
 #mainCanvas {
@@ -64,6 +64,9 @@ footer {
 #valuesX,
 #valuesY,
 #valuesPen {
+	display: inline-block;
+    height: 17px;
+    width: 30px;
     font-weight: bold;
 }
 
@@ -118,6 +121,7 @@ input[type="list"] {
 }
 
 #Label {
+	text-align: right;
     font-size: medium;
     font-weight: 700;
     width: 61px;
@@ -125,19 +129,26 @@ input[type="list"] {
     font-family: FreeMono, monospace;
 }
 
-input[type="color"] {
+input[class="color"], #colorPalette {
+    color: transparent;
     -webkit-appearance: none;
     border: none;
     width: 25px;
     height: 25px;
     border-radius: 50%;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(169, 169, 169);
+    border-image: initial;
+    padding: 1px 2px;
+    content: "";
 }
 
-input[type="color"]::-webkit-color-swatch-wrapper {
+input[type="color"]::-webkit-color-swatch-wrapper, #colorPalette::-webkit-color-swatch-wrapper  {
     padding: 0;
 }
 
-input[type="color"]::-webkit-color-swatch {
+input[type="color"]::-webkit-color-swatch, #colorPalette::-webkit-color-swatch{
     border: none;
     border-radius: 50%;
 }
@@ -148,10 +159,12 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .suwaczki {
+	text-align: center;
     margin: 5px 0 5px 0;
 }
 
 .guziczki {
+    text-align: center;
     margin: 7px 0 7px 0;
 }
 
