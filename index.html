@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <link rel="shortcut icon" href="icon.ico">
-    <meta name="viewport" content="width=device-width user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link id="pagestyle" rel="stylesheet" href="style.css" type="text/css">
     <link rel="shortcut icon" href="icon.ico">
     <script src="script.js"></script>
@@ -19,25 +19,27 @@
         <button data-mode="rubber" class="button-mode" type="button"><img src="rubber.png"/></button>
         <div class="sidebar" style="display: none" id="menuToggle">
             <div class="kolorki">
-                <input readonly id="color0" class="color" value="#000000" onclick="ChangeColor(value)">
-                <input readonly id="color1" class="color" value="#FFFFFF" onclick="ChangeColor(value)">
-                <input readonly id="color2" class="color" value="#FF0000" onclick="ChangeColor(value)">
-                <input readonly id="color3" class="color" value="#FF00FF" onclick="ChangeColor(value)">
-                <input readonly id="color4" class="color" value="#00FF00" onclick="ChangeColor(value)">
-                <input readonly id="color5" class="color" value="#FFFF00" onclick="ChangeColor(value)">
-                <input readonly id="color6" class="color" value="#0000FF" onclick="ChangeColor(value)">
-                <input readonly id="color7" class="color" value="#00FFFF" onclick="ChangeColor(value)">
-                <input type="color" id="colorPalette" value="#BD9584" class="color" onclick="ChangeColor(value)">
+                <input readonly id="color0" class="color" value="#000000" onclick="ChangeColor(value);">
+                <input readonly id="color1" class="color" value="#FFFFFF" onclick="ChangeColor(value);">
+                <input readonly id="color2" class="color" value="#FF0000" onclick="ChangeColor(value);">
+                <input readonly id="color3" class="color" value="#FF00FF" onclick="ChangeColor(value);">
+                <input readonly id="color4" class="color" value="#00FF00" onclick="ChangeColor(value);">
+                <input readonly id="color5" class="color" value="#FFFF00" onclick="ChangeColor(value);">
+                <input readonly id="color6" class="color" value="#0000FF" onclick="ChangeColor(value);">
+                <input readonly id="color7" class="color" value="#00FFFF" onclick="ChangeColor(value);">
+                <div class="colorPalette">
+					<input type="color" id="colorPalette" value="#BD9584" class="color" onchange="ChangeColor(value);">
+				</div>
             </div>
             <div class="suwaczki">
                 <span id="Label">SIZE</span>
-                <input class="sliderPen" type="range" id="sizePen" value="5" min="5" max="40" onchange="controlPanel()"><span id="valuesPen"></span>
+                <input class="sliderPen" type="range" id="sizePen" value="5" min="5" max="40" onchange="controlPanel();"><span id="valuesPen"></span>
                 <br>
                 <span id="Label">WIDTH</span>
-                <input class="sliderX" type="range" id="heightX" value="100" min="50" onchange="sizeOfCanvas()"><span id="valuesX"></span>
+                <input class="sliderX" type="range" id="heightX" value="100" min="50" onchange="sizeOfCanvas();"><span id="valuesX"></span>
                 <br>
                 <span id="Label">HEIGHT</span>
-                <input class="sliderY" type="range" id="heightY" value="100" min="50" onchange="sizeOfCanvas()"><span id="valuesY"></span>
+                <input class="sliderY" type="range" id="heightY" value="100" min="50" onchange="sizeOfCanvas();"><span id="valuesY"></span>
                 <br>
             </div>
             <div class="guziczki">
@@ -48,8 +50,8 @@
                 <button class="button" id="loadBtn" onclick="load()">LOAD</button>
                 <button class="button" id="saveBtn" onclick="save();loadFiles();">SAVE</button>
 
-                <button class="button" id="downloadBtn" onclick="download()">DOWNLOAD</button>
-                <button class="button" id="clearBtn" onclick="clearCanvas()">CLEAR</button>
+                <button class="button" id="downloadBtn" onclick="download();">DOWNLOAD</button>
+                <button class="button" id="clearBtn" onclick="clearCanvas();">CLEAR</button>
             </div>
         </div>
         <br>

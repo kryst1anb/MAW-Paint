@@ -65,6 +65,9 @@ footer {
 #valuesX,
 #valuesY,
 #valuesPen {
+	display: inline-block;
+    height: 17px;
+    width: 30px;
     font-weight: bold;
 }
 
@@ -119,6 +122,7 @@ input[type="list"] {
 }
 
 #Label {
+	text-align: right;
     font-size: medium;
     font-weight: 700;
     width: 61px;
@@ -141,19 +145,11 @@ input[class="color"], #colorPalette {
     content: "";
 }
 
-input[type="color"] {
-    -webkit-appearance: none;
-    border: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-}
-
-input[type="color"]::-webkit-color-swatch-wrapper {
+input[type="color"]::-webkit-color-swatch-wrapper, #colorPalette::-webkit-color-swatch-wrapper  {
     padding: 0;
 }
 
-input[type="color"]::-webkit-color-swatch {
+input[type="color"]::-webkit-color-swatch, #colorPalette::-webkit-color-swatch{
     border: none;
     border-radius: 50%;
 }
@@ -164,6 +160,7 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .suwaczki {
+	text-align: center;
     margin: 5px 0 5px 0;
 }
 
