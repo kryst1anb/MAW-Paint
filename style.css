@@ -24,8 +24,9 @@ body {
 }
 
 canvas {
+    border: 1px solid black;
     position: inherit;
-    background-color: green;
+    background:white;
 }
 
 #mainCanvas {
@@ -167,6 +168,7 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .guziczki {
+    text-align: center;
     margin: 7px 0 7px 0;
 }
 
